@@ -1,10 +1,11 @@
 package com.ordersystem.model;
+import java.util.ArrayList;
 import java.util.List;
 public class AbstractConsumer {
-    protected List<Order> orders;
+    protected final List<Order> orders;
 
     public AbstractConsumer() {
-        
+        this.orders = new ArrayList<>();
     }
 
     public void addOrder(Order order) {
@@ -28,11 +29,11 @@ public class AbstractConsumer {
         return false;
     }
 
-    public void completedOrder(Order order) {
+    public void completedOrder(AbstractOrder order) {
         order.setStatus(OrderStatus.COMPLETED);
     }
 
-    public int getCompletedOrders() {
+    public int getCountOfCompletedOrders() {
         int count = 0;
         for (Order order: orders) {
             if (order.getStatus() == OrderStatus.COMPLETED) {
@@ -40,6 +41,17 @@ public class AbstractConsumer {
             }
         }
         return count;
+    }
+
+    public List<Order> getCompletedOrders() {
+        List<Order> completedList = new ArrayList<>();
+        for (Order order: orders) {
+            if (order.getStatus() == OrderStatus.COMPLETED) {
+                completedList.add(order);
+            }
+        }
+
+        return completedList;
     }
 
     public double getRevenue() {

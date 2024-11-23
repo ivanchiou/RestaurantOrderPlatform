@@ -1,32 +1,36 @@
 package com.ordersystem.model;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AbstractProducer {
-    protected List<Order> orders;
+    protected final List<AbstractOrder> orders;
 
     public AbstractProducer() {
-        
+        this.orders = new ArrayList<>();
     }
-    public void addOrder(Order order) {
+    public void addOrder(AbstractOrder order) {
         orders.add(order);
     }
 
     public boolean cancelOrder(long id) {
-        for (Order order: orders) {
-            if (order.getId() == id) {
-                order.cancel();
+        for (AbstractOrder abstractOrder: orders) {
+            if (abstractOrder.getId() == id) {
+                if (abstractOrder.getClass() == Order.class) {
+                    Order order = (Order) abstractOrder;
+                    order.cancel();
+                }
                 return true;
             }
         }
         return false;
     }
 
-    public List<Order> getTotalOrders() {
+    public List<AbstractOrder> getTotalOrders() {
         return this.orders;
     }
 
     public double getOrderTotalPrice(long id) {
-        for (Order order: orders) {
+        for (AbstractOrder order: this.orders) {
             if (order.getId() == id) {
                 return order.getTotalPrice();
             }
@@ -36,7 +40,7 @@ public class AbstractProducer {
 
     public double getTotalPrice() {
         double sum = 0;
-        for (Order order: orders) {
+        for (AbstractOrder order: this.orders) {
             sum += order.getTotalPrice();
         }
         return sum;
