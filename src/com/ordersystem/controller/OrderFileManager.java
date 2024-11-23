@@ -27,9 +27,14 @@ public class OrderFileManager {
             this.columnName = columnName;
         }
 
-        public String getColumnName() {
+        @Override
+        public String toString() {
             return this.columnName;
         }
+
+        public String concat(Object value) {
+            return this.toString() + value;
+        };
     }
     private final String BASE_DIRECTORY = "orders";
     private final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -49,10 +54,10 @@ public class OrderFileManager {
         try(PrintWriter writer = new PrintWriter(new FileWriter(file, false))) {
             for (Order order: orders) {
                 writer.println("==== Orders Details ====");
-                writer.println(OrderColumnName.ID.getColumnName() + order.getId());
-                writer.println(OrderColumnName.TIME.getColumnName() + order.getTime());
-                writer.println(OrderColumnName.STATUS.getColumnName()+ order.getStatus());
-                writer.println(OrderColumnName.ITEM.getColumnName());
+                writer.println(OrderColumnName.ID.concat(order.getId()));
+                writer.println(OrderColumnName.TIME.concat(order.getTime()));
+                writer.println(OrderColumnName.STATUS.concat(order.getStatus()));
+                writer.println(OrderColumnName.ITEM);
                 for (Map.Entry<MenuItem, Integer> item : order.getItems().entrySet()) {
                     writer.printf("%s-%.1f-%d\n", item.getKey().getName(), item.getKey().getPrice(), item.getValue());
                 }
@@ -77,8 +82,8 @@ public class OrderFileManager {
         lock.readLock().lock();
         try(BufferedReader reader = new BufferedReader(new FileReader(orderFile))) {
             while((line = reader.readLine()) != null) {
-                if(line.startsWith(OrderColumnName.ID.getColumnName())) {
-                    String orderIdString = line.substring(OrderColumnName.ID.getColumnName().length()).trim();
+                if(line.startsWith(OrderColumnName.ID+"")) {
+                    String orderIdString = line.substring((OrderColumnName.ID+"").length()).trim();
                     long orderId = Long.parseLong(orderIdString);
                     currentOrder = new Order(orderId);
                 } 
