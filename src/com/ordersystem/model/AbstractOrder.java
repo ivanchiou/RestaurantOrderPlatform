@@ -1,4 +1,5 @@
 package com.ordersystem.model;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractOrder implements InterfaceOrder {
@@ -8,8 +9,9 @@ public abstract class AbstractOrder implements InterfaceOrder {
 
     public AbstractOrder(long id) {
         this.id = id;
+        this.status = OrderStatus.WAITING;
+        this.items = new HashMap<>();
     }
-
     
     @Override
     public long getId() {

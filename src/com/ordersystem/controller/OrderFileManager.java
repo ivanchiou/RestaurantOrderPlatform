@@ -3,9 +3,7 @@ import com.ordersystem.model.Order;
 import com.ordersystem.model.OrderStatus;
 import com.ordersystem.model.MenuItem;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
