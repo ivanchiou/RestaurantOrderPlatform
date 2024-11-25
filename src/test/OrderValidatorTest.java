@@ -32,4 +32,17 @@ public class OrderValidatorTest {
     public void shouldNotValidOrderIds(String orderID) {
         assertFalse(OrderValidator.isValidOrderID(orderID), "訂單ID非17位數應該是無效的");
     } 
+
+    @DisplayName("測試有效的價格格式")
+    @ParameterizedTest(name = "價格 {0} 應該是有效的")
+    @ValueSource(strings={
+        "99.9",
+        "99.11",
+        "0.99",
+        "1000",
+        "10000000"
+    })
+    public void shouldValidPrice(String price) {
+        assertTrue(OrderValidator.isValidPrice(price), "價格格式應該是有效的");
+    }
 }
