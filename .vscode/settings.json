@@ -3,5 +3,11 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar"
-    ]
+    ],
+    "java.dependency.syncWithFolderExplorer": true, // 同步 Java Projects 視圖與檔案總管
+    "java.dependency.packagePresentation": "hierarchical",  // 套件顯示方式：hierarchical（層級式）或 flat（扁平式）
+    "java.completion.enabled": true, // 啟用程式碼補全
+    "java.autobuild.enabled": true, // 啟用自動建構
+    "java.compile.nullAnalysis.mode": "automatic",  // 自動進行 null 分析
+    "java.configuration.updateBuildConfiguration": "automatic" // 自動更新建構配置
 }

@@ -3,10 +3,35 @@
     "configurations": [
         {
             "type": "java",
-            "name": "App",
+            "name": "Main",
             "request": "launch",
             "mainClass": "App",
-            "projectName": "RestaurantOrderPlatform_154336b1"
+            "projectName": "RestaurantOrderPlatform_154336b1",
+            "cwd": "${workspaceFolder}/src",
+        },
+        {
+            "type": "java",
+            "name": "Debug JUnit Tests",
+            "request": "launch",
+            "mainClass": "${file}",
+            "vmArgs": "-ea -Dfile.encoding=UTF-8",
+            "projectName": "ordersystem",
+            "classPaths": [
+                "${workspaceFolder}/bin",
+                "${workspaceFolder}/lib/*"
+            ],
+            "sourcePaths": [
+                "${workspaceFolder}/src/test"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run JAR",
+            "request": "launch",
+            "mainClass": "-jar",
+            "args": "${workspaceFolder}/target/${workspaceFolderBasename}.jar",
+            "encoding": "UTF-8",
+            "vmArgs": "-Dfile.encoding=UTF-8 -Xms256m -Xmx512m"
         }
     ]
 }
