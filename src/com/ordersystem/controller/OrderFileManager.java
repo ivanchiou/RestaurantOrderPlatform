@@ -1,5 +1,6 @@
 package com.ordersystem.controller;
 import com.ordersystem.model.Order;
+import com.ordersystem.model.OrderStatus;
 import com.ordersystem.model.MenuItem;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 
 public class OrderFileManager {
     private enum OrderColumnName {
-        ID("Order ID:"), TIME("Order Time:"), STATUS("Order Status:"), ITEM("Menu Items:");
+        ID("Order ID:"), TIME("Order Time:"), STATUS("Order Status:"), ITEM("Menu Items:"), END("========================");
         private final String columnName;
 
         OrderColumnName(String columnName){
@@ -61,7 +62,7 @@ public class OrderFileManager {
                 for (Map.Entry<MenuItem, Integer> item : order.getItems().entrySet()) {
                     writer.printf("%s-%.1f-%d\n", item.getKey().getName(), item.getKey().getPrice(), item.getValue());
                 }
-                writer.println("========================");
+                writer.println(OrderColumnName.END);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -82,11 +83,30 @@ public class OrderFileManager {
         lock.readLock().lock();
         try(BufferedReader reader = new BufferedReader(new FileReader(orderFile))) {
             while((line = reader.readLine()) != null) {
-                if(line.startsWith(OrderColumnName.ID+"")) {
-                    String orderIdString = line.substring((OrderColumnName.ID+"").length()).trim();
+                if(line.startsWith(OrderColumnName.ID.toString())) {
+                    String orderIdString = line.substring((OrderColumnName.ID.toString()).length()).trim();
                     long orderId = Long.parseLong(orderIdString);
                     currentOrder = new Order(orderId);
-                } 
+                } else if(line.startsWith(OrderColumnName.STATUS.toString())) {
+                    String orderStatusString = line.substring((OrderColumnName.STATUS.toString()).length()).trim();
+                    currentOrder.setStatus(OrderStatus.valueOf(orderStatusString));
+                } else if(line.startsWith(OrderColumnName.TIME.toString())) {
+                    String orderTimeString = line.substring((OrderColumnName.TIME.toString()).length()).trim();
+                    LocalDateTime orderTime = orderTimeString.equals("null") ? null : LocalDateTime.parse(orderTimeString);
+                    currentOrder.setTime(orderTime);
+                } else if(line.startsWith(OrderColumnName.ITEM.toString())) {
+                    while ((line = reader.readLine()) != OrderColumnName.END.toString() && (line = reader.readLine()) != null) {
+                        // Menu Items:
+                        // 漢堡-50.0-1
+                        // 薯條-35.0-1
+                        String[] parts = line.split("-");
+                        String itemName = parts[0].trim();
+                        double price = Double.parseDouble(parts[1].trim());
+                        int quantity = Integer.parseInt(parts[2].trim());
+                        MenuItem menuItem = new MenuItem(itemName, price, "");
+                        currentOrder.addItem(menuItem, quantity);
+                    }
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
