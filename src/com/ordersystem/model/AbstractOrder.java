@@ -1,5 +1,8 @@
 package com.ordersystem.model;
+import java.util.HashMap;
 import java.util.Map;
+
+import com.ordersystem.controller.OrderValidator;
 
 public abstract class AbstractOrder implements InterfaceOrder {
     protected final long id;
@@ -8,6 +11,8 @@ public abstract class AbstractOrder implements InterfaceOrder {
 
     public AbstractOrder(long id) {
         this.id = id;
+        this.items = new HashMap<>();
+        this.status = OrderStatus.WAITING;
     }
 
     
@@ -33,7 +38,9 @@ public abstract class AbstractOrder implements InterfaceOrder {
 
     @Override
     public void addItem(MenuItem item, int quantity) {
-        this.items.put(item, this.items.getOrDefault(item, 0) + quantity);
+        if (OrderValidator.isValidQuantity(quantity+"")) {
+            this.items.put(item, this.items.getOrDefault(item, 0) + quantity);
+        }
     }
 
     @Override
