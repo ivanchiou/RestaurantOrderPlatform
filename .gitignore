@@ -20,3 +20,4 @@
 *.tar.gz
 *.swp
 bin/
+target/
